@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import prisma from "../lib/prisma.js";
 import jwt from "jsonwebtoken";
+
 export const register = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -45,6 +46,9 @@ export const login = async (req, res) => {
       })
       .status(200)
       .json({ message: "Login successful", userInfo });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
   } catch (error) {
     res.status(500).json({ message: "Login failed" });
   }
@@ -54,4 +58,5 @@ export const logout = (req, res) => {
     .clearCookie("token")
     .status(200)
     .json({ message: "Logged out successfully" });
+  //db operatins
 };
